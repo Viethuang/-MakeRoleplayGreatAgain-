@@ -54,7 +54,7 @@ hook OP_EnterCheckpoint@12(playerid)
 {
     if(PlayerCheckpoint[playerid] == 5)
     {
-        GameTextForPlayer(playerid, "~p~This GPS TO BUY COMP!", 3000, 3);
+        GameTextForPlayer(playerid, "~p~GPS NAY DE MUA COMP!", 3000, 3);
         PlayerCheckpoint[playerid] = 0; DisablePlayerCheckpoint(playerid);
         return 1;
     }
@@ -125,42 +125,42 @@ stock GetRepairPrice(vehicleid)
 CMD:service(playerid, params[])
 {
     if(PlayerInfo[playerid][pJob] != JOB_MECHANIC)
-        return SendErrorMessage(playerid, "คุณไม่ใช่อาชีพช่างยนต์");
+        return SendErrorMessage(playerid, "Ban khong phai la mot mechanic.");
 
     new option, tagetid, confirm[16];
 
     if(sscanf(params, "udS()[16]", tagetid, option, confirm))
     {
-        SendUsageMessage(playerid, "/service <ชื่อบางส่วน/ไอดี> <service>");
+        SendUsageMessage(playerid, "/service <Ten nguoi choi/ID> <service>");
         SendClientMessage(playerid, COLOR_GREY, "SERVICE : OPTION");
-        SendClientMessage(playerid, -1, "1. ซ่อมภายนอก (ซ่อมให้กลับมาสภาพดีแต่ไม่เพิ่มเลือดยานพหานะ)");
-        SendClientMessage(playerid, -1, "2. ซ่อมภายใน (เพิ่มเลือดยานพาหนะ)");
-        SendClientMessage(playerid, -1, "3. เปลี่ยนแบตตารี่ ");
+        SendClientMessage(playerid, -1, "1. Sua chua hinh dang (Sua chua nhung khong them mau xe).");
+        SendClientMessage(playerid, -1, "2. Sua chua ben trong xe (Sua chua se duoc them mau xe).");
+        SendClientMessage(playerid, -1, "3. Thay ac quy. ");
         return 1;
     }
 
 	if(!IsPlayerConnected(tagetid))
-		return SendErrorMessage(playerid, "ผู้เล่นไม่ได้เชื่อมต่อกับเซืฟเวอร์"); 
+		return SendErrorMessage(playerid, "Nguoi choi khong o trong may chu."); 
 		
 	if(!BitFlag_Get(gPlayerBitFlag[tagetid], IS_LOGGED))
-		return SendErrorMessage(playerid, "ผู้เล่นกำลังเข้าสู่ระบบ");
+		return SendErrorMessage(playerid, "Nguoi choi dang dang nhap.");
 
     if(!IsPlayerNearPlayer(playerid, tagetid, 15.0))
-        return SendErrorMessage(playerid, "ผู้เล่นไมได้อยู่ใกล้คุณ");
+        return SendErrorMessage(playerid, "Nguoi choi khong o gan ban.");
 
 
     new vehicleid = GetPlayerVehicleID(tagetid);
 
     if(!IsPlayerInVehicle(tagetid, vehicleid))
-        return SendErrorMessage(playerid, "ผู้เล่นไม่ได้ขึ้นรถ");
+        return SendErrorMessage(playerid, "Nguoi choi khong o tren xe.");
     
     if(!IsPlayerInVehicle(playerid, GetPlayerVehicleID(playerid)))
-        return SendErrorMessage(playerid, "คุณต้องอยู่บนรถ TowTruck");
+        return SendErrorMessage(playerid, "Ban phai o trong xe TowTruck.");
     
     new modelid = GetVehicleModel(GetPlayerVehicleID(playerid));
 
     if(modelid != 525)
-        return SendErrorMessage(playerid, "คุณต้องอยู่บนรถ TowTruck");
+        return SendErrorMessage(playerid, "Ban phai o trong xe TowTruck.");
 
     new comp;
     
@@ -175,14 +175,14 @@ CMD:service(playerid, params[])
                 comp = floatround(float(GetRepairPrice(vehicleid)) / 10.0, floatround_round);
 
                 if(comp < 1)
-                    return SendErrorMessage(playerid, "รถไม่ได้รับความเสียหาย");
+                    return SendErrorMessage(playerid, "Chiec xe nay khong bi hu hong.");
 
                 if(!strcmp(confirm, "yes", true) && strlen(confirm))
                 {
                     if(VehicleInfo[GetPlayerVehicleID(playerid)][eVehicleComp] < comp)
-                        return SendErrorMessage(playerid, "อะไหล่ของคุณไม่เพียงพอ");
+                        return SendErrorMessage(playerid, "Cac bo phan cua ban khong du.");
                 
-                    SendClientMessage(playerid, COLOR_YELLOW, "SERVER: ข้อเสนอถูกส่ง");
+                    SendClientMessage(playerid, COLOR_YELLOW, "SERVER: Yeu cau da duoc gui.");
                 
                     ServiceCalls[playerid][S_SER_ID] = tagetid;
                     ServiceCalls[playerid][S_SER_VID][0] = GetPlayerVehicleID(playerid);
@@ -191,12 +191,12 @@ CMD:service(playerid, params[])
                     ServiceCalls[playerid][S_SER_CALL] = option;
 
                     ServiceCalls[tagetid][S_SER_BY] = playerid;
-                    SendClientMessageEx(tagetid, -1, "%s ได้ยืนข้อเสนอสำหรับการซ่อมยานพาหนะ %s ของคุณ "EMBED_LIGHTRED"- กด Y ย้ำๆ(1-5 ครั้ง) เพื่อยอมรับข้อเสนอนี้", ReturnName(playerid, 0), ReturnVehicleName(vehicleid));
+                    SendClientMessageEx(tagetid, -1, "%s de xuat sua chua xe %s cua ban "EMBED_LIGHTRED"- Nhan Y de nhap chan yeu cau.", ReturnName(playerid, 0), ReturnVehicleName(vehicleid));
                     return 1;
                 }
                 else
                 {
-                    SendClientMessageEx(playerid, COLOR_YELLOW, "บริการนี้ต้องใช้ อะไหล่ ทั้งหมด %d ชิ้น", comp);
+                    SendClientMessageEx(playerid, COLOR_YELLOW, "Dich vu nay yeu cau hop sua chua %d de sua chua.", comp);
                     SendSyntaxMessage(playerid, "/service %d %d yes", tagetid, option);
                     return 1;
                 }
@@ -210,7 +210,7 @@ CMD:service(playerid, params[])
                 GetVehicleHealth(vehicleid, vehhp);
                 
                 if(vehhp == VehicleData[modelid_taget - 400][c_max_health])
-                    return SendErrorMessage(playerid, "ภายในของรถไม่ได้รับความเสียหาย");
+                    return SendErrorMessage(playerid, "Ben trong chiec xe nay khong bi hu hong.");
                 
                 new Float:result = (VehicleData[modelid_taget - 400][c_max_health] - vehhp) / 50 * 2;
                 
@@ -219,9 +219,9 @@ CMD:service(playerid, params[])
                 if(!strcmp(confirm, "yes", true) && strlen(confirm))
                 {
                     if(VehicleInfo[GetPlayerVehicleID(playerid)][eVehicleComp] < comp)
-                        return SendErrorMessage(playerid, "อะไหล่ของคุณไม่เพียงพอ");
+                        return SendErrorMessage(playerid, "Cac bo phan cua ban khong du.");
                 
-                    SendClientMessage(playerid, COLOR_YELLOW, "SERVER: ข้อเสนอถูกส่ง");
+                    SendClientMessage(playerid, COLOR_YELLOW, "SERVER: Yeu cau da duoc gui.");
                 
 
                     ServiceCalls[playerid][S_SER_ID] = tagetid;
@@ -231,12 +231,12 @@ CMD:service(playerid, params[])
                     ServiceCalls[playerid][S_SER_CALL] = option;
 
                     ServiceCalls[tagetid][S_SER_BY] = playerid;
-                    SendClientMessageEx(tagetid, -1, "%s ได้ยืนข้อเสนอสำหรับการซ่อมยานพาหนะ %s ของคุณ "EMBED_LIGHTRED"- กด Y เพื่อยอมรับข้อเสนอนี้", ReturnName(playerid, 0), ReturnVehicleName(vehicleid));
+                    SendClientMessageEx(tagetid, -1, "%s de xuat sua chua xe %s cua ban "EMBED_LIGHTRED"- Nhan Y de chap nhan yeu cau.", ReturnName(playerid, 0), ReturnVehicleName(vehicleid));
                     return 1;
                 }
                 else
                 {
-                    SendClientMessageEx(playerid, COLOR_YELLOW, "บริการนี้ต้องใช้ อะไหล่ ทั้งหมด %d ชิ้น", comp);
+                    SendClientMessageEx(playerid, COLOR_YELLOW, "Sua chua bo phan nay can %d hop sua chua de sua chua.", comp);
                     SendSyntaxMessage(playerid, "/service %d %d yes", tagetid, option);
                     return 1;
                 }
@@ -247,7 +247,7 @@ CMD:service(playerid, params[])
                 new Float:EngineLife;
 
                 if(VehicleInfo[vehicleid][eVehicleEngine] >= 100)
-                    return SendErrorMessage(playerid, "แบตตารี่เต็มแล้ว");
+                    return SendErrorMessage(playerid, "Ac quy da day");
             
                 EngineLife = 100 - VehicleInfo[vehicleid][eVehicleEngine];
 
@@ -255,9 +255,9 @@ CMD:service(playerid, params[])
                 if(!strcmp(confirm, "yes", true) && strlen(confirm))
                 {
                     if(VehicleInfo[GetPlayerVehicleID(playerid)][eVehicleComp] < comp)
-                        return SendErrorMessage(playerid, "อะไหล่ของคุณไม่เพียงพอ");
+                        return SendErrorMessage(playerid, "Cac bo phan cua ban khong du.");
                 
-                    SendClientMessage(playerid, COLOR_YELLOW, "SERVER: ข้อเสนอถูกส่ง");
+                    SendClientMessage(playerid, COLOR_YELLOW, "SERVER: Yeu cau da duoc gui.");
                     
                     ServiceCalls[playerid][S_SER_ID] = tagetid;
                     ServiceCalls[playerid][S_SER_VID][0] = GetPlayerVehicleID(playerid);
@@ -267,12 +267,12 @@ CMD:service(playerid, params[])
 
                     ServiceCalls[tagetid][S_SER_BY] = playerid;
                     
-                    SendClientMessageEx(tagetid, -1, "%s ได้ยืนข้อเสนอสำหรับการซ่อมยานพาหนะ %s ของคุณ "EMBED_LIGHTRED"- กด Y เพื่อยอมรับข้อเสนอนี้", ReturnName(playerid, 0), ReturnVehicleName(vehicleid));
+                    SendClientMessageEx(tagetid, -1, "%s de xuat sua chua xe %s cua ban "EMBED_LIGHTRED"- Nhan Y de chap nhan yeu cau.", ReturnName(playerid, 0), ReturnVehicleName(vehicleid));
                     return 1;
                 }
                 else
                 {
-                    SendClientMessageEx(playerid, COLOR_YELLOW, "บริการนี้ต้องใช้ อะไหล่ ทั้งหมด %d ชิ้น", comp);
+                    SendClientMessageEx(playerid, COLOR_YELLOW, "Sua chua bo phan nay can %d hop sua chua de sua chua.", comp);
                     SendSyntaxMessage(playerid, "/service %d %d yes", tagetid, option);
                     return 1;
                 }
@@ -280,49 +280,49 @@ CMD:service(playerid, params[])
 
         }
     }
-    else SendErrorMessage(playerid, "กรุณาเลือกให้ถูกต้อง");
+    else SendErrorMessage(playerid, "Vui long chon chinh xac.");
     
     return 1;
 }
 
 alias:changcolorvehicle("chcolorveh", "setcolor")
-CMD:changcolorvehicle(playerid, params[])
+CMD:changecolorvehicle(playerid, params[])
 {
     if(PlayerInfo[playerid][pJob] != JOB_MECHANIC)
-        return SendErrorMessage(playerid, "คุณไม่ใช่อาชีพช่างยนต์");
+        return SendErrorMessage(playerid, "Ban khong phai la mot mechanic.");
 
     if(!IsPlayerInAnyVehicle(playerid))
-        return SendErrorMessage(playerid, "คุณไม่ได้อยู่บนยานพาหนะ TowTruck");
+        return SendErrorMessage(playerid, "Ban khong o ben trong xe Tow Truck.");
 
     if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 525)
-        return SendErrorMessage(playerid, "คุณไม่ได้อยู่บนยานพหานะ Tow Truck");
+        return SendErrorMessage(playerid, "Ban khong o tren xe Tow Truck.");
 
     new str_one[20], str_two[20], tagetid, confirm[20];
 
     if(sscanf(params, "us[20]S()[20]S()[20]", tagetid, str_one, str_two, confirm))
     {
-        SendUsageMessage(playerid, "/changcolorvehicle <ชื่อบางส่วน/ไอดี> <color1 or color2>");
+        SendUsageMessage(playerid, "/changecolorvehicle <Ten nguoi choi/ID> <color1 hoac color2>");
         return 1;
     }
 
     if(!IsPlayerConnected(tagetid))
-		return SendErrorMessage(playerid, "ผู้เล่นไม่ได้เชื่อมต่อกับเซืฟเวอร์"); 
+		return SendErrorMessage(playerid, "Nguoi choi khong o trong may chu."); 
 		
 	if(!BitFlag_Get(gPlayerBitFlag[tagetid], IS_LOGGED))
-		return SendErrorMessage(playerid, "ผู้เล่นกำลังเข้าสู่ระบบ");
+		return SendErrorMessage(playerid, "Nguoi choi dang dang nhap.");
 
     if(!IsPlayerNearPlayer(playerid, tagetid, 15.0))
-        return SendErrorMessage(playerid, "ผู้เล่นไมได้อยู่ใกล้คุณ");
+        return SendErrorMessage(playerid, "Nguoi choi khong o gan ban.");
 
     if(!IsPlayerInAnyVehicle(tagetid))
-        return SendErrorMessage(playerid, "ผู้เล่นไม่ได้อยู่บนยานพาหนะ");
+        return SendErrorMessage(playerid, "Nguoi choi khong co tren xe.");
 
 
     new vehicleid_taget = GetPlayerVehicleID(tagetid);
     new vehicleid_my = GetPlayerVehicleID(playerid);
 
     if(VehicleInfo[vehicleid_my][eVehicleComp] < 15)
-        return SendErrorMessage(playerid, "คุณมีอะไหล่ไม่เพียงพอ");
+        return SendErrorMessage(playerid, "Ban khong co hop sua chua de thay the.");
 
     if(!strcmp(str_one, "color1", true))
     {
@@ -332,7 +332,7 @@ CMD:changcolorvehicle(playerid, params[])
             return SendUsageMessage(playerid, "/changcolorvehicle %d color1 <เลขสี>");
 
         if(value > 255 || value < 0)
-			return SendErrorMessage(playerid, "ค่าต้องไม่ต่ำหรือไม่เกินกว่า (0-255)");
+			return SendErrorMessage(playerid, "Gia tri chi trong (0-255).");
         
         if(!strcmp(confirm, "yes", true) && strlen(confirm))
         {
@@ -345,12 +345,12 @@ CMD:changcolorvehicle(playerid, params[])
             ServiceCalls[playerid][S_SER_COLOR][1] = VehicleInfo[vehicleid_taget][eVehicleColor2];
 
             ServiceCalls[tagetid][S_SER_BY] = playerid;
-            SendClientMessageEx(tagetid, -1, "%s ได้ยืนข้อเสนอสำหรับการเปลี่ยนสียานพาหนะ %s ของคุณ "EMBED_LIGHTRED"- กด Y เพื่อยอมรับข้อเสนอนี้", ReturnName(playerid, 0), ReturnVehicleName(vehicleid_taget));
+            SendClientMessageEx(tagetid, -1, "%s da yeu cau duoc thay son cho %s cua ban "EMBED_LIGHTRED"- Nhan Y de chap nhan yeu cau.", ReturnName(playerid, 0), ReturnVehicleName(vehicleid_taget));
             return 1;
         }
         else
         {
-            SendClientMessageEx(playerid, COLOR_YELLOW, "บริการนี้ต้องใช้ อะไหล่ ทั้งหมด %d ชิ้น", 15);
+            SendClientMessageEx(playerid, COLOR_YELLOW, "Sua chua bo phan nay can %d hop sua chua de sua chua.", 15);
             SendSyntaxMessage(playerid, "/service %d %s yes", tagetid, str_one);
             return 1;
         }
@@ -376,12 +376,12 @@ CMD:changcolorvehicle(playerid, params[])
             ServiceCalls[playerid][S_SER_COLOR][1] = value;
 
             ServiceCalls[tagetid][S_SER_BY] = playerid;
-            SendClientMessageEx(tagetid, -1, "%s ได้ยืนข้อเสนอสำหรับการเปลี่ยนสียานพาหนะ %s ของคุณ "EMBED_LIGHTRED"- กด Y เพื่อยอมรับข้อเสนอนี้", ReturnName(playerid, 0), ReturnVehicleName(vehicleid_taget));
+            SendClientMessageEx(tagetid, -1, "%s ได้ยืนข้อเสนอสำหรับการเปลี่ยนสียานพาหนะ %s ของคุณ "EMBED_LIGHTRED"- Nhan Y de chap nhan yeu cau.", ReturnName(playerid, 0), ReturnVehicleName(vehicleid_taget));
             return 1;
         }
         else
         {
-            SendClientMessageEx(playerid, COLOR_YELLOW, "บริการนี้ต้องใช้ อะไหล่ ทั้งหมด %d ชิ้น", 15);
+            SendClientMessageEx(playerid, COLOR_YELLOW, "Sua chua bo phan nay can %d hop sua chua de sua chua.", 15);
             SendSyntaxMessage(playerid, "/service %d %s yes", tagetid, str_one);
             return 1;
         }
@@ -394,13 +394,13 @@ CMD:changcolorvehicle(playerid, params[])
 CMD:tune(playerid, params[])
 {
     if(PlayerInfo[playerid][pJob] != JOB_MECHANIC)
-        return SendErrorMessage(playerid, "คุณไม่ใช่อาชีพช่างยนต์");
+        return SendErrorMessage(playerid, "Ban khong phai la mot mechanic.");
 
     if(!IsPlayerInAnyVehicle(playerid))
-        return SendErrorMessage(playerid, "คุณไม่ได้อยู่บนยานพาหนะ TowTruck");
+        return SendErrorMessage(playerid, "Ban khong o ben trong xe TowTruck");
 
     if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 525)
-        return SendErrorMessage(playerid, "คุณไม่ได้อยู่บนยานพหานะ Tow Truck");
+        return SendErrorMessage(playerid, "Ban khong o tren xe Tow Truck");
 
     new componentid, tagetid, confirm[20];
 
@@ -408,16 +408,16 @@ CMD:tune(playerid, params[])
         return SendUsageMessage(playerid, "/trun <ชื่อบางส่วน/ไอดี> <componentid>");
 
     if(!IsPlayerConnected(tagetid))
-		return SendErrorMessage(playerid, "ผู้เล่นไม่ได้เชื่อมต่อกับเซืฟเวอร์"); 
+		return SendErrorMessage(playerid, "Nguoi choi khong o trong may chu."); 
 		
 	if(!BitFlag_Get(gPlayerBitFlag[tagetid], IS_LOGGED))
-		return SendErrorMessage(playerid, "ผู้เล่นกำลังเข้าสู่ระบบ");
+		return SendErrorMessage(playerid, "Nguoi choi dang dang nhap.");
 
     if(!IsPlayerNearPlayer(playerid, tagetid, 15.0))
-        return SendErrorMessage(playerid, "ผู้เล่นไมได้อยู่ใกล้คุณ");
+        return SendErrorMessage(playerid, "Nguoi choi khong o gan ban.");
 
     if(!IsPlayerInAnyVehicle(tagetid))
-        return SendErrorMessage(playerid, "ผู้เล่นไม่ได้อยู่บนยานพาหนะ");
+        return SendErrorMessage(playerid, "Nguoi choi khong co tren xe.");
 
     
     if(componentid < 1000 || componentid > 1193)
@@ -431,7 +431,7 @@ CMD:tune(playerid, params[])
     new comp = floatround(componentid / 50, floatround_round);
 
     if(VehicleInfo[vehicleid_my][eVehicleComp] < comp)
-        return SendErrorMessage(playerid, "คุณมีอะไหล่ไม่เพียงพอ");
+        return SendErrorMessage(playerid, "Ban khong co hop sua chua de thay the.");
 
 
     if(!strcmp(confirm, "yes", true) && strlen(confirm))
@@ -444,11 +444,11 @@ CMD:tune(playerid, params[])
         ServiceCalls[playerid][S_SER_COMPONENT] = componentid;
 
         ServiceCalls[tagetid][S_SER_BY] = playerid;
-        SendClientMessageEx(tagetid, -1, "%s ได้ยืนข้อเสนอสำหรับการแต่งยานพาหนะ %s ของคุณ "EMBED_LIGHTRED"- กด Y เพื่อยอมรับข้อเสนอนี้", ReturnName(playerid, 0), ReturnVehicleName(vehicleid_taget));
+        SendClientMessageEx(tagetid, -1, "%s ได้ยืนข้อเสนอสำหรับการแต่งยานพาหนะ %s ของคุณ "EMBED_LIGHTRED"- Nhan Y de chap nhan yeu cau.", ReturnName(playerid, 0), ReturnVehicleName(vehicleid_taget));
     }
     else
     {
-        SendClientMessageEx(playerid, COLOR_YELLOW, "บริการนี้ต้องใช้ อะไหล่ ทั้งหมด %d ชิ้น", 15);
+        SendClientMessageEx(playerid, COLOR_YELLOW, "Sua chua bo phan nay can %d hop sua chua de sua chua.", 15);
         SendSyntaxMessage(playerid, "/trun %d %d yes", tagetid, componentid);
     }
     return 1;
@@ -476,7 +476,7 @@ alias:checkcomponents("checkcomp")
 CMD:checkcomponents(playerid, params[])
 {
     if(PlayerInfo[playerid][pJob] != JOB_MECHANIC)
-        return SendErrorMessage(playerid, "คุณไม่ใช่อาชีพช่างยนต์");
+        return SendErrorMessage(playerid, "Ban khong phai la mot mechanic.");
 
     if(!IsPlayerInAnyVehicle(playerid))
         return SendErrorMessage(playerid, "คุณไม่ได้อยู่บนรถ TowTruck");
@@ -498,7 +498,7 @@ alias:buycomponents("buycomp")
 CMD:buycomponents(playerid, params[])
 {
     if(PlayerInfo[playerid][pJob] != JOB_MECHANIC)
-        return SendErrorMessage(playerid, "คุณไม่ใช่อาชีพช่างยนต์");
+        return SendErrorMessage(playerid, "Ban khong phai la mot mechanic.");
 
     if(!IsPlayerInAnyVehicle(playerid))
         return SendErrorMessage(playerid, "คุณไม่ได้อยู่บนรถ TowTruck");
@@ -559,7 +559,7 @@ CMD:addcomp(playerid, params[])
 CMD:fixcar(playerid, params[])
 {
     if(PlayerInfo[playerid][pJob] != JOB_MECHANIC)
-        return SendErrorMessage(playerid, "คุณไม่ใช่อาชีพช่างยนต์");
+        return SendErrorMessage(playerid, "Ban khong phai la mot mechanic.");
     
     if(ServiceCalls[playerid][S_SER_ID] == INVALID_PLAYER_ID)
         return SendErrorMessage(playerid, "คุณยังไมได้ยื่นข้อเสนอกับใคร");

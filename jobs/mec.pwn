@@ -13,7 +13,7 @@ hook OnGameModeInit()
 hook OP_PickUpDynamicPickup(playerid, STREAMER_TAG_PICKUP:pickupid)
 {
     if(pickupid == mec_pick)
-        return SendClientMessage(playerid, -1, "พิพม์ /mechanic เพื่อสมัครเป็นช่างยนต์");
+        return SendClientMessage(playerid, -1, "Su dung /mechanic de nhan cong viec.");
 
 
     return 1;
@@ -26,7 +26,7 @@ hook OP_ClickPlayerTextDraw(playerid, PlayerText:playertextid)
         if(VehicleInfo[GetPlayerVehicleID(playerid)][eVehicleLocked])
         {
             MecJobShow(playerid, false);
-            SendErrorMessage(playerid, "ยานพาหนะถูกล็อค");
+            SendErrorMessage(playerid, "Xe bi khoa.");
         }
 
         if(playertextid == MecTextDraw[playerid][3])
@@ -34,7 +34,7 @@ hook OP_ClickPlayerTextDraw(playerid, PlayerText:playertextid)
             
 
             if(!IsPlayerInAnyVehicle(playerid))
-                return SendInfomationMess(playerid, "~r~[!] You don't get in car", 10);
+                return SendInfomationMess(playerid, "~r~[!] Ban khong len xe.", 10);
 
             
             new vehicleid = GetPlayerVehicleID(playerid);
@@ -46,32 +46,32 @@ hook OP_ClickPlayerTextDraw(playerid, PlayerText:playertextid)
             GetVehicleHealth(vehicleid, vehhp);
             
             if(vehhp == VehicleData[modelid_taget - 400][c_max_health])
-                SendClientMessage(playerid, -1, "Vehicle Not Domage");
+                SendClientMessage(playerid, -1, "Phuong tien khong bi hu hai.");
             else
             {
                 new Float:result = (VehicleData[modelid_taget - 400][c_max_health] - vehhp) / 50 * 2;
                 box = floatround(result,floatround_round);
-                SendClientMessageEx(playerid, -1, "Repair Box: %d",box);
+                SendClientMessageEx(playerid, -1, "Bo sua chua: %d",box);
             }
 
             if(PlayerInfo[playerid][pRepairBox] < box)
-                return SendInfomationMess(playerid, "~r~ You don't have Repair Box", 5);
+                return SendInfomationMess(playerid, "~r~ Ban khong co bo sua chua.", 5);
 
 
 
             
             PlayerInfo[playerid][pRepairBox] -= box;
             SetVehicleHealth(vehicleid, VehicleData[modelid_taget - 400][c_max_health]);
-            SendInfomationMess(playerid, "~g~ Repair success Now!!!!", 5);
+            SendInfomationMess(playerid, "~g~ Sua chua thanh cong!!!!", 5);
 
-            PlayerTextDrawSetString(playerid, MecTextDraw[playerid][3], "Vehicle Not Damage");
+            PlayerTextDrawSetString(playerid, MecTextDraw[playerid][3], "Phuong tien khong bi hu hai.");
             CharacterSave(playerid);
             
             return 1;
         }
         else if(playertextid == MecTextDraw[playerid][5])
         {
-            Dialog_Show(playerid, D_MEC_MENU_LIST, DIALOG_STYLE_LIST, "เมนูช่าง", "[!] เปลี่ยนสี\n[!] แต่งรถ\n[!] ล้างที่แต่งออก", "ยืนยัน", "ยกเลิก");
+            Dialog_Show(playerid, D_MEC_MENU_LIST, DIALOG_STYLE_LIST, "Mechanic Menu", "Thay doi mau\nTuy chinh xe\nXoa tuning", "Lua chon", "Huy");
             MecJobShow(playerid, false);
             return 1;
         }
@@ -145,7 +145,7 @@ stock MecJobShow(playerid, show = false)
         PlayerTextDrawSetProportional(playerid, MecTextDraw[playerid][2], 1);
         PlayerTextDrawSetSelectable(playerid, MecTextDraw[playerid][2], 0);
 
-        MecTextDraw[playerid][3] = CreatePlayerTextDraw(playerid, 22.000000, 122.000000, "Fix Vehicle ~r~$300");
+        MecTextDraw[playerid][3] = CreatePlayerTextDraw(playerid, 22.000000, 122.000000, "Sua xe ~r~$300");
         PlayerTextDrawFont(playerid, MecTextDraw[playerid][3], 1);
         PlayerTextDrawLetterSize(playerid, MecTextDraw[playerid][3], 0.204166, 1.400000);
         PlayerTextDrawTextSize(playerid, MecTextDraw[playerid][3], 173.500000, 137.500000);
@@ -159,7 +159,7 @@ stock MecJobShow(playerid, show = false)
         PlayerTextDrawSetProportional(playerid, MecTextDraw[playerid][3], 1);
         PlayerTextDrawSetSelectable(playerid, MecTextDraw[playerid][3], 1);
 
-        MecTextDraw[playerid][4] = CreatePlayerTextDraw(playerid, 22.000000, 107.000000, "Manage the Ruiner");
+        MecTextDraw[playerid][4] = CreatePlayerTextDraw(playerid, 22.000000, 107.000000, "Quan ly Ruiner");
         PlayerTextDrawFont(playerid, MecTextDraw[playerid][4], 2);
         PlayerTextDrawLetterSize(playerid, MecTextDraw[playerid][4], 0.212500, 1.300000);
         PlayerTextDrawTextSize(playerid, MecTextDraw[playerid][4], 173.500000, 31.000000);
@@ -205,23 +205,23 @@ stock MecJobShow(playerid, show = false)
             GetVehicleHealth(vehicleid, vehhp);
         
             if(vehhp == VehicleData[modelid_taget - 400][c_max_health])
-                format(str, sizeof(str), "Vehicle Not Domage");
+                format(str, sizeof(str), "Phuong tien khong bi hu hai.");
             else
             {
                 new Float:result = (VehicleData[modelid_taget - 400][c_max_health] - vehhp) / 50 * 2;
                 new box = floatround(result,floatround_round);
 
-                format(str, sizeof(str), "Fix Vehicle use Repair Box: %d",box);
+                format(str, sizeof(str), "Sua xe voi bo sua chua: %d",box);
             }
 
             PlayerTextDrawSetString(playerid, MecTextDraw[playerid][3], str);
         }
         else
         {
-            PlayerTextDrawSetString(playerid, MecTextDraw[playerid][3], "You Enter Vehicle");
+            PlayerTextDrawSetString(playerid, MecTextDraw[playerid][3], "Ban phai nhap xe.");
         }
 
-        SendClientMessage(playerid, -1, "/mecjob อีกครั้งเพื่อปิด");
+        SendClientMessage(playerid, -1, "/mecjob mot lan nua de dong.");
         SelectTextDraw(playerid, COLOR_GRAD1);
         PlayerShowMecMenu[playerid] = true;
     }
@@ -247,16 +247,16 @@ Dialog:D_MEC_MENU_LIST(playerid, response, listitem, inputtext[])
         return MecJobShow(playerid, true);
 
     if(VehicleInfo[GetPlayerVehicleID(playerid)][eVehicleLocked])
-        return SendErrorMessage(playerid, "ยานพาหนะถูกล็อค");
+        return SendErrorMessage(playerid, "Xe nay da khoa.");
 
     switch(listitem)
     {
         case 0:
         {
             new str[50];
-            format(str, sizeof(str), "COLOR 1\nCOLOR 2");
+            format(str, sizeof(str), "MAU 1\nMAU 2");
 
-            Dialog_Show(playerid, D_MEC_MENU_COLO_LIST, DIALOG_STYLE_LIST, "เลือกจุดที่จะเติมสี", str, "ยินยัน", "ยกเลิก");
+            Dialog_Show(playerid, D_MEC_MENU_COLO_LIST, DIALOG_STYLE_LIST, "Color Change", str, "Chon", "Huy");
             return 1;
         }
         case 1:
@@ -267,7 +267,7 @@ Dialog:D_MEC_MENU_LIST(playerid, response, listitem, inputtext[])
         case 2:
         {
             if(!IsPlayerInAnyVehicle(playerid))
-                return SendErrorMessage(playerid, "คุณไม่ได้อยู่บนยานพาหนะ");
+                return SendErrorMessage(playerid, "Ban khong o tren xe.");
 
             new vehicleid = GetPlayerVehicleID(playerid);
 
@@ -277,7 +277,7 @@ Dialog:D_MEC_MENU_LIST(playerid, response, listitem, inputtext[])
             }
             SaveVehicle(vehicleid);
 
-            SendClientMessage(playerid, -1, "ล้างสิ่งที่แต่งออกหมดแล้ว");
+            SendClientMessage(playerid, -1, "Da xoa het tat ca nhung gi duoc them.");
             return 1;
         }
     }
@@ -291,18 +291,18 @@ Dialog:D_MEC_MENU_COLO_LIST(playerid, response, listitem, inputtext[])
 
 
     if(PlayerInfo[playerid][pRepairBox] < 5)
-        return SendErrorMessage(playerid, "คุณมีอะไหล่ไม่เพียงพอต่อการดำเนินการ");
+        return SendErrorMessage(playerid, "Ban khong co du hop sua chua de tiep tuc.");
 
     switch(listitem)
     {
         case 0:
         {
-            Dialog_Show(playerid, D_MEC_MENU_COLOR1, DIALOG_STYLE_INPUT, "ใส่เลขสี", "ใส่เลขสีที่คุณต้องการลงไปหากคุณไม่ทราบคุณสามารถที่จะพิพม์ /colorlist ได้", "ยืนยัน", "ยกเลิก");
+            Dialog_Show(playerid, D_MEC_MENU_COLOR1, DIALOG_STYLE_INPUT, "Nhap so mau", "Nhap so mau cua ban muon - /colorlist de xem so mau", "Nhap", "Huy");
             return 1;
         }
         case 1:
         {
-            Dialog_Show(playerid, D_MEC_MENU_COLOR2, DIALOG_STYLE_INPUT, "ใส่เลขสี", "ใส่เลขสีที่คุณต้องการลงไปหากคุณไม่ทราบคุณสามารถที่จะพิพม์ /colorlist ได้", "ยืนยัน", "ยกเลิก");
+            Dialog_Show(playerid, D_MEC_MENU_COLOR2, DIALOG_STYLE_INPUT, "Nhap so mau", "Nhap so mau cua ban muon - /colorlist de xem so mau", "Nhap", "Huy");
             return 1;
         }
     }
@@ -330,7 +330,7 @@ Dialog:D_MEC_MENU_COLOR1(playerid, response, listitem, inputtext[])
     ChangeVehicleColor(vehicleid, newcolor, color2);
     SaveVehicle(vehicleid);
 
-    SendInfomationMess(playerid, "~g~ChangeVehicle Color Now!!!", 5);
+    SendInfomationMess(playerid, "~g~Thay doi mau xe bay gio!!!", 5);
     return 1;
 }
 
@@ -354,7 +354,7 @@ Dialog:D_MEC_MENU_COLOR2(playerid, response, listitem, inputtext[])
 
     ChangeVehicleColor(vehicleid, color1, newcolor);
     SaveVehicle(vehicleid);
-    SendInfomationMess(playerid, "~g~ChangeVehicle Color Now!!!", 5);
+    SendInfomationMess(playerid, "~g~Thay doi mau xe bay gio!!!", 5);
     return 1;
 }
 ///// Dialog Zone:
@@ -364,13 +364,13 @@ Dialog:D_MEC_MENU_COLOR2(playerid, response, listitem, inputtext[])
 CMD:mechanic(playerid, params[])
 {
     if(PlayerInfo[playerid][pJob] == JOB_MECHANIC)
-        return SendErrorMessage(playerid, "คุณเป็นอาชีพงานช่างยนต์อยู่แล้ว");
+        return SendErrorMessage(playerid, "Ban da la mot nghe nghiep co khi.");
 
     if(!IsPlayerInRangeOfPoint(playerid, 3.0, 90.2705,-164.6044,2.5938))  
-        return SendErrorMessage(playerid, "คุณไม่ได้อยู่จุดสมัครงานช่างยนต์");
+        return SendErrorMessage(playerid, "Ban khong dung gan diem nhan viec.");
 
     PlayerInfo[playerid][pJob] = JOB_MECHANIC;
-	GameTextForPlayer(playerid, "~r~Congratulations,~n~~w~You are now a ~y~Mechanic.~n~~w~/jobhelp.", 8000, 1);
+	GameTextForPlayer(playerid, "~r~Chuc mung,~n~~w~Ban da nhan cong viec ~y~Mechanic.~n~~w~/jobhelp.", 8000, 1);
     return 1;
 }
 
@@ -383,13 +383,13 @@ CMD:mecjob(playerid, params[])
     return 1;
 }
 
-CMD:checkreapir(playerid, params[])
+CMD:checkrepair(playerid, params[])
 {
     if(PlayerInfo[playerid][pJob] != JOB_MECHANIC)
-        return SendErrorMessage(playerid, "คุณไม่ใช่อาชีพช่างยนต์");
+        return SendErrorMessage(playerid, "Ban khong phai la mot mechanic!");
 
 
-    SendClientMessageEx(playerid, COLOR_YELLOWEX, "คุณเหลืออะไหล่ในการใช้งานอยู่ %d ชิ้น", PlayerInfo[playerid][pRepairBox]);
+    SendClientMessageEx(playerid, COLOR_YELLOWEX, "Ban con %d hop sua chua", PlayerInfo[playerid][pRepairBox]);
     return 1;
 }
 //// Zone Command
